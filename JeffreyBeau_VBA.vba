@@ -89,7 +89,6 @@ For Each ws In Worksheets
         total_stock_volume = 0
         
         Else
-        
             total_stock_volume = total_stock_volume + ws.Cells(a, 7).Value
         
         End If
@@ -176,7 +175,7 @@ For Each ws In Worksheets
         ElseIf ws.Cells(d, 12).Value = greatest_total_volume Then
             ws.Range("O4").Value = result
         
-    End If
+        End If
     
     Next d
     
