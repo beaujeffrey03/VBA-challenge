@@ -165,19 +165,19 @@ For Each ws In Worksheets
     
     For d = 2 To last_row_summary
     
-        result = Cells(d, 9).Value
+        result = ws.Cells(d, 9).Value
     
-        If Cells(d, 11).Value = max Then
+        If ws.Cells(d, 11).Value = max Then
     
-            Range("O2").Value = result
+            ws.Range("O2").Value = result
         
-        ElseIf Cells(d, 11).Value = min Then
+        ElseIf ws.Cells(d, 11).Value = min Then
         
-            Range("O3").Value = result
+            ws.Range("O3").Value = result
         
-        ElseIf Cells(d, 12).Value = greatest_total_volume Then
+        ElseIf ws.Cells(d, 12).Value = greatest_total_volume Then
     
-            Range("O4").Value = result
+            ws.Range("O4").Value = result
         
     End If
     
