@@ -1,11 +1,8 @@
 Sub StockSummary()
 
-Dim ws_count As Integer
-ws_count = ActiveWorkbook.Worksheets.Count
+Dim ws As Worksheet
 
-Dim ws_loop As Integer
-
-For ws_loop = 1 To ws_count
+For Each ws In Worksheets
 
     Dim ticker_name As String
 
@@ -30,22 +27,22 @@ For ws_loop = 1 To ws_count
     summary_table_row = 2
 
     Dim last_row As Long
-    last_row = Cells(Rows.Count, 1).End(xlUp).Row
+    last_row = ws.Cells(Rows.Count, 1).End(xlUp).Row
 
-    For I = 2 To last_row
+    For a = 2 To last_row
 
-        current_row = Cells(I, 1).Value
-        next_row = Cells(I + 1, 1).Value
-        previous_row = Cells(I - 1, 1).Value
+        current_row = ws.Cells(a, 1).Value
+        next_row = ws.Cells(a + 1, 1).Value
+        previous_row = ws.Cells(a - 1, 1).Value
     
         If current_row <> previous_row Then
-            opening_price = Cells(I, 3).Value
+            opening_price = ws.Cells(a, 3).Value
     
         ElseIf current_row <> next_row Then
     
             ticker_name = current_row
         
-            closing_price = Cells(I, 6).Value
+            closing_price = ws.Cells(a, 6).Value
         
             yearly_change = closing_price - opening_price
         
@@ -57,62 +54,60 @@ For ws_loop = 1 To ws_count
             
             End If
         
-            Debug.Print ticker_name
+        total_stock_volume = total_stock_volume + ws.Cells(a, 7).Value
         
-            total_stock_volume = total_stock_volume + Cells(I, 7).Value
+        ws.Range("I1").Value = "Ticker"
         
-            Range("I1").Value = "Ticker"
+        ws.Range("I" & summary_table_row).Value = ticker_name
         
-            Range("I" & summary_table_row).Value = ticker_name
+        ws.Range("J1").Value = "Yearly Change"
         
-            Range("J1").Value = "Yearly Change"
+        ws.Range("J" & summary_table_row).Value = yearly_change
         
-            Range("J" & summary_table_row).Value = yearly_change
+        ws.Range("K1").Value = "% Change"
         
-            Range("K1").Value = "% Change"
+        ws.Range("K" & summary_table_row).Value = percent_change
         
-            Range("K" & summary_table_row).Value = percent_change
+        ws.Columns("K").NumberFormat = "0.00%"
         
-            Columns("K").NumberFormat = "0.00%"
+        ws.Range("K" & summary_table_row).Style = "Percent"
         
-            Range("K" & summary_table_row).Style = "Percent"
+        ws.Range("L1").Value = "Total Stock Volume"
         
-            Range("L1").Value = "Total Stock Volume"
+        ws.Range("L" & summary_table_row).Value = total_stock_volume
         
-            Range("L" & summary_table_row).Value = total_stock_volume
+        summary_table_row = summary_table_row + 1
         
-            summary_table_row = summary_table_row + 1
+        yearly_change = 0
         
-            yearly_change = 0
+        percent_change = 0
         
-            percent_change = 0
-        
-            total_stock_volume = 0
+        total_stock_volume = 0
         
         Else
         
-            total_stock_volume = total_stock_volume + Cells(I, 7).Value
+            total_stock_volume = total_stock_volume + ws.Cells(a, 7).Value
         
         End If
 
-    Next I
+    Next a
 
-    last_row_summary = Cells(Rows.Count, 9).End(xlUp).Row
+    last_row_summary = ws.Cells(Rows.Count, 9).End(xlUp).Row
 
-    For j = 2 To last_row_summary
+    For b = 2 To last_row_summary
 
         Dim summary_change As Double
-        summary_change = Cells(j, 10).Value
+        summary_change = ws.Cells(b, 10).Value
 
         If summary_change >= 0 Then
-            Cells(j, 10).Interior.ColorIndex = 10
+            ws.Cells(b, 10).Interior.ColorIndex = 10
         
         Else
-            Cells(j, 10).Interior.ColorIndex = 3
+            ws.Cells(b, 10).Interior.ColorIndex = 3
     
         End If
     
-    Next j
+    Next b
 
     Dim max As Double
     
@@ -120,42 +115,68 @@ For ws_loop = 1 To ws_count
 
     Dim greatest_total_volume As Double
 
-    For k = 2 To last_row_summary
+    For c = 2 To last_row_summary
     
         Calculate
     
-        percent_column = Range("K2:K" & last_row_summary).Value
+        percent_column = ws.Range("K2:K" & last_row_summary).Value
     
-        volume_column = Range("L2:L" & last_row_summary).Value
+        volume_column = ws.Range("L2:L" & last_row_summary).Value
     
-        max = Application.WorksheetFunction.max(percent_column)
+        max = ws.Application.WorksheetFunction.max(percent_column)
     
-        min = Application.WorksheetFunction.min(percent_column)
+        min = ws.Application.WorksheetFunction.min(percent_column)
     
-        greatest_total_volume = Application.WorksheetFunction.max(volume_column)
+        greatest_total_volume = ws.Application.WorksheetFunction.max(volume_column)
     
-        Range("O1").Value = "Ticker"
+        ws.Range("O1").Value = "Ticker"
     
-        Range("P1").Value = "Value"
+        ws.Range("P1").Value = "Value"
     
-        Range("N2").Value = "Greatest % Increase"
+        ws.Range("N2").Value = "Greatest % Increase"
     
-        Range("P2").Value = max
+        ws.Range("P2").Value = max
     
-        Range("N3").Value = "Greatest % Decrease"
+        ws.Range("N3").Value = "Greatest % Decrease"
     
-        Range("P3").Value = min
+        ws.Range("P3").Value = min
     
-        Range("N4").Value = "Greatest Total Volume"
+        ws.Range("N4").Value = "Greatest Total Volume"
     
-        Range("P4").Value = greatest_total_volume
+        ws.Range("P4").Value = greatest_total_volume
     
-        Range("P2:P3").Style = "Percent"
+        ws.Range("P2:P3").Style = "Percent"
     
-        Range("P2:P3").NumberFormat = "0.00%"
+        ws.Range("P2:P3").NumberFormat = "0.00%"
+        
+    Next c
+    
+    Dim d As Integer
+    
+    Dim result As String
+    
+    For d = 2 To last_row_summary
+    
+        result = Cells(d, 9).Value
+    
+        If Cells(d, 11).Value = max Then
+    
+            Range("O2").Value = result
+        
+        ElseIf Cells(d, 11).Value = min Then
+        
+            Range("O3").Value = result
+        
+        ElseIf Cells(d, 12).Value = greatest_total_volume Then
+    
+            Range("O4").Value = result
+        
+    End If
+    
+    Next d
+    
+    ws.Columns("A:P").AutoFit
 
-    Next k
-
-Next ws_loop
+Next ws
 
 End Sub
