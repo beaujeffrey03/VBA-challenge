@@ -28,7 +28,9 @@ For Each ws In Worksheets
 
     Dim last_row As Long
     last_row = ws.Cells(Rows.Count, 1).End(xlUp).Row
-
+    
+    Dim a As Integer
+    
     For a = 2 To last_row
 
         current_row = ws.Cells(a, 1).Value
@@ -53,6 +55,8 @@ For Each ws In Worksheets
                 percent_change = yearly_change / opening_price
             
             End If
+        
+        Debug.Print ticker_name
         
         total_stock_volume = total_stock_volume + ws.Cells(a, 7).Value
         
@@ -93,6 +97,8 @@ For Each ws In Worksheets
     Next a
 
     last_row_summary = ws.Cells(Rows.Count, 9).End(xlUp).Row
+    
+    Dim b As Integer
 
     For b = 2 To last_row_summary
 
@@ -114,6 +120,8 @@ For Each ws In Worksheets
     Dim min As Double
 
     Dim greatest_total_volume As Double
+    
+    Dim c As Integer
 
     For c = 2 To last_row_summary
     
