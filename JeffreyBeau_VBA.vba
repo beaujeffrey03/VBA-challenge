@@ -168,15 +168,12 @@ For Each ws In Worksheets
         result = ws.Cells(d, 9).Value
     
         If ws.Cells(d, 11).Value = max Then
-    
             ws.Range("O2").Value = result
         
         ElseIf ws.Cells(d, 11).Value = min Then
-        
             ws.Range("O3").Value = result
         
         ElseIf ws.Cells(d, 12).Value = greatest_total_volume Then
-    
             ws.Range("O4").Value = result
         
     End If
